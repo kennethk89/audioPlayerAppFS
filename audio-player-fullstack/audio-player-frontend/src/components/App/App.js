@@ -26,6 +26,7 @@ class App extends Component {
   changeSong = (index) => {
     const { currentSong, isPlaying } = this.state
     this.setState({
+      currentAudioTime: 0,
       currentSong: currentSong + index
     }, () => {
       // eslint-disable-next-line
