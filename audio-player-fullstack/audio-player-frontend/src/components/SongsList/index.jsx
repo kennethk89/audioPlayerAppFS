@@ -9,6 +9,7 @@ class SongsList extends Component {
                 <button onClick={() => { this.props.playSong(i) }}>Play</button>
             </li>
         })
+        
         return (
             <div>
                 <h2>SONG LIST</h2>

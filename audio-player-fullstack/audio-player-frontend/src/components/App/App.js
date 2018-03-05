@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import { Route } from 'react-router-dom'
 import SongsList from '../SongsList'
 import SongDetails from '../SongDetails'
 import axios from 'axios'
-import './App.css';
-
-
+import './App.css'
 
 class App extends Component {
   state = {
     currentSong: 0,
     isPlaying: false,
-    songs: []
+    songs: [],
+    currentAudioTime: 0,
+    totalAudioTime: 0,
   }
 
   componentDidMount() {
@@ -53,33 +53,57 @@ class App extends Component {
     this.audioPlayer.play()
   }
 
+  statusBar = () => {
+    this.setState({
+      currentAudioTime: this.audioPlayer.currentTime,
+      totalAudioTime: this.audioPlayer.duration
+    })
+  }
+
+  timeValue = (time) => {
+    let minute = Math.floor(time / 60)
+    let seconds = Math.floor(time % 60)
+
+    // eslint-disable-next-line
+    seconds < 10 ? seconds = '0' + seconds : seconds
+
+    return (isNaN(time)) ? '0:00' : minute + ':' + seconds
+  }
+
   render() {
+    let audioProgress = (this.state.currentAudioTime / this.state.totalAudioTime) * 100
     const { isPlaying, currentSong } = this.state
+
     return (
       this.state.songs.length > 0 && (
         <div className="App">
-
-          <audio ref={(self) => { this.audioPlayer = self }}>
+          <audio ref={(self) => { this.audioPlayer = self }}
+            onTimeUpdate={this.statusBar} >
             <source src={this.state.songs[currentSong].source} />
           </audio>
+
+          <div className="songDetails">
+            {this.timeValue(this.state.currentAudioTime)} / {this.timeValue(this.state.totalAudioTime)}
+          </div>
+
+          <div className="progress">
+            <div className="progress-bar progress-bar-danger" role="progressbar" aria-valuenow={70}
+              aria-valuemin={0} aria-valuemax={100} style={{ width: audioProgress + '%' }}>
+            </div>
+          </div>
 
           <button disabled={currentSong === 0}
             onClick={() => { this.changeSong(-1) }}>
             Previous
           </button>
 
-          <button disabled={isPlaying}
+          <button
             onClick={this.pumpItUp}>
-            Play
-          </button>
-
-          <button disabled={!isPlaying}
-            onClick={this.pumpItUp}>
-            Pause
+            {isPlaying ? 'Pause' : 'Play'}
           </button>
 
           <button disabled={currentSong === this.state.songs.length - 1}
-            onClick={() => { this.changeSong(+1) }}>
+            onClick={() => { this.changeSong(1) }}>
             Next
           </button>
 
@@ -96,8 +120,8 @@ class App extends Component {
           } />
         </div>
       )
-    );
+    )
   }
 }
 
-export default App;
+export default App

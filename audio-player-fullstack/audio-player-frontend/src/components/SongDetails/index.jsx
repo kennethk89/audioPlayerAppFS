@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
 class SongDetails extends Component {
@@ -20,4 +20,4 @@ class SongDetails extends Component {
     }
 }
 
-export default SongDetails;
+export default SongDetails
